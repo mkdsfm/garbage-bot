@@ -1,0 +1,4 @@
+aiogram
+gigachat
+gtts
+pydub
