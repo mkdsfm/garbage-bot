@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from modules.bot.service import BotService
+from app.bot import BotService
 
 logger = logging.getLogger(__name__)
 
