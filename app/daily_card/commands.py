@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 
 router = Router()
 
-@router.message(Command("day_card"))
-async def cmd_day_card(message: Message):
+@router.message(Command("daily_card"))
+async def cmd_daily_card(message: Message):
     try:
         if not settings.TAROT_DECK:
             logger.error("Колода карт пуста!")

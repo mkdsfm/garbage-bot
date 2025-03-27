@@ -18,7 +18,7 @@ async def cmd_help(message: Message):
     Доступные команды:
     /start - начать работу с ботом
     /help - получить справку
-    /day_card - получить карту дня
+    /daily_card - получить карту дня
     """
     await message.answer(help_text)
 
