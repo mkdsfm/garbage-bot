@@ -1,5 +1,6 @@
 from aiogram import Router, F
 from aiogram.types import Message
+from aiogram.utils.media_group import MediaGroupBuilder
 from aiogram.filters import Command
 from config import settings
 import logging
@@ -19,16 +20,27 @@ async def cmd_daily_card(message: Message):
         
         card = random.choice(settings.TAROT_DECK)
         
-        response = (
+        content = (
             f"✨ Карта дня: {card.name} \n\n"
             f"Ключевые слова: {card.key_words} \n\n"
             f"Значение: {card.meaning} \n\n"
         )
+
+        if card.music_urls:
+            music_url = random.choice(card.music_urls)
+            content += f"{music_url}"
+
+        builder = MediaGroupBuilder(
+            caption=content
+        )
+
+        image_urls = card.image_urls or settings.BASE_IMAGE_URLS
+        image_url = random.choice(image_urls)
+
+        builder.add_photo(image_url)
+
+        await message.answer_media_group(builder.build())
         
-        if card.image_url:
-            await message.answer_photo(card.image_url, caption=response)
-        else:
-            await message.answer(response)
             
     except Exception as e:
         logger.error(f"Ошибка в tarot_card: {e}")
