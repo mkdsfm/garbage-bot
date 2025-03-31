@@ -24,13 +24,16 @@ async def cmd_daily_card(message: Message):
         content = (
             f"✨ Карта дня: {card.name} \n\n"
             f"Ключевые слова: {card.key_words} \n\n"
-            f"Значение: {card.meaning} \n\n",
-            f"{random.choice(card.alter_meaning)} \n\n"
+            f"Значение: {card.meaning} \n\n"
         )
+
+        if card.alter_meaning:
+            meaning = random.choice(card.alter_meaning)
+            content += f"{meaning}\n\n"
 
         if card.music_urls:
             music_url = random.choice(card.music_urls)
-            content += f"{music_url}"
+            content += f"{music_url}\n\n"
 
         builder = MediaGroupBuilder(
             caption=content
