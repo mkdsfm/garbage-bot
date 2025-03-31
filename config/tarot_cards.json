@@ -566,9 +566,12 @@
     {
         "name": "Восьмёрка Мечей 🪢",
         "key_words": "Ограничения, жертва обстоятельств",
-        "meaning": "Ты как кот, застрявший в коробке: мог бы выйти, но драма важнее. 📦😾",
+        "meaning": "Твоя жизнь сейчас — это квест 'Выберись из своих мыслей' на сложном уровне 🧠🎮💢",
+        "alter_meaning":[
+            "Если не можешь снять оковы — сделай их своим стильным аксессуаром ⛓️💎😎"
+        ],
         "image_urls" : [
-            "https://downloader.disk.yandex.ru/preview/f1cc48daf7cd8fdd5e2cc42b1a02676d94ce80c5eaa9e4a934d216151036d0cb/67e5fbf2/rysNczHMvOUR2YezrpbtPiUBUiGD4t_2XMPWe8bxtEGma5IeM11sYIuA5cO1upFRV5zZTjo3W8C6Z-QpNLOp8A%3D%3D?uid=0&filename=photo_2025-03-27_23-44-25.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v2&size=2048x2048"
+            "./images/photo_2025-03-27_23-44-25.jpg"
         ]
     },
     {
@@ -592,7 +595,7 @@
         "key_words": "Надежда, преодоление страхов",
         "meaning": "Ты понял, что апокалипсис отменяется — можно платить ипотеку. 🏠💸",
         "image_urls" : [
-            "https://downloader.disk.yandex.ru/preview/f1cc48daf7cd8fdd5e2cc42b1a02676d94ce80c5eaa9e4a934d216151036d0cb/67e5fbf2/rysNczHMvOUR2YezrpbtPiUBUiGD4t_2XMPWe8bxtEGma5IeM11sYIuA5cO1upFRV5zZTjo3W8C6Z-QpNLOp8A%3D%3D?uid=0&filename=photo_2025-03-27_23-44-25.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v2&size=2048x2048"
+            "./images/photo_2025-03-27_23-44-25.jpg"
         ]
     },
     {
