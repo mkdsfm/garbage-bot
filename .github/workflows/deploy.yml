@@ -1,0 +1,53 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch or commit to deploy'
+        required: false
+        default: 'main'
+
+jobs:
+  deploy:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+    environment: main
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.8.1
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Copy source code to server
+      run: |
+        rsync -avz --exclude='.git' --exclude='.github' ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USER }}/taro-bot/
+
+    - name: Build and run Docker container on server
+      run: |
+        ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          cd /home/${{ secrets.SERVER_USER }}/taro-bot
+
+          # Остановим и удалим старый контейнер, если он есть
+          docker stop taro-bot || true
+          docker rm taro-bot || true
+          docker rmi taro-bot:latest || true
+
+          # Собираем новый образ
+          docker build -t taro-bot:latest .
+
+          # Запускаем с переменными окружения из GitHub Secrets
+          docker run -d \
+            --name taro-bot \
+            --restart always \
+            -e TELEGRAM_BOT_TOKEN='${{ secrets.TELEGRAM_BOT_TOKEN }}' \
+            -e GIGACHAT_CREDENTIALS='${{ secrets.GIGACHAT_CREDENTIALS }}' \
+            taro-bot:latest
+        EOF
