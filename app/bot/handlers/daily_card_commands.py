@@ -25,23 +25,20 @@ async def cmd_daily_card(message: Message):
     meaning = await generator.generate_meaning_from_name_async(card.name)
     
     try:
-        content = (meaning)
+        content = f"{meaning}\n\n"
 
         if card.music_url:
             content += f"{card.music_url}\n\n"
-
-        builder = MediaGroupBuilder(
-            caption=content
-        )
 
         image_url = card.image_url or random.choice(settings.BASE_IMAGE_URLS)
         if image_url.startswith("./images/"):
              image_url = FSInputFile(image_url)
              
-        builder.add_photo(image_url)
-
-        await message.answer_media_group(builder.build())
-        
+        await message.answer_photo(
+            photo=image_url,
+            caption=content,
+            parse_mode="HTML"
+        )
             
     except Exception as e:
         logger.error(f"Ошибка в tarot_card {card} : {e}")
