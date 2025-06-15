@@ -12,7 +12,6 @@ class TarotCard(BaseModel):
     meaning: str
     image_urls: Optional[List[str]] = None
     alter_meaning: Optional[List[str]] = None
-    description: Optional[str] = None
     music_urls: Optional[List[str]] = None
 
 class Settings(BaseSettings):

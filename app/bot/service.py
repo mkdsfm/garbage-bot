@@ -1,7 +1,6 @@
 import logging
 from aiogram import Bot, Dispatcher
 from config import settings
-import app.daily_card.commands
 
 logger = logging.getLogger(__name__)
 
@@ -18,11 +17,11 @@ class BotService:
     
     
     def _register_handlers(self):
-        from .handlers import commands
+        from .handlers import default_commands, daily_card_commands
         
         # Регистрируем хэндлеры
-        commands.register_commands_handlers(self.dp)
-        app.daily_card.commands.register_card_day_handlers(self.dp)
+        default_commands.register_commands_handlers(self.dp)
+        daily_card_commands.register_card_day_handlers(self.dp)
         
         logger.info("Bot handlers registered")
     
