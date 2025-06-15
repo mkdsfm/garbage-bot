@@ -1,24 +1,23 @@
 import json
-from typing import Optional
+from typing import Optional, Type
 from pydantic_settings import BaseSettings
 from typing import Optional, List, Dict
-from pydantic import Field, SecretStr, BaseModel, field_validator
+from pydantic import Field, SecretStr, field_validator
 import logging
 from pathlib import Path
 
-class TarotCard(BaseModel):
-    name: str
-    key_words: str
-    meaning: str
-    image_urls: Optional[List[str]] = None
-    alter_meaning: Optional[List[str]] = None
-    music_urls: Optional[List[str]] = None
+from app.tarot_daily_card.manager import ITarotDailyCardGenerator
+from config.models import TarotCard
+from implementations.gigachat_daily_card_generator import GigaChatTarotDailyCardGenerator
 
 class Settings(BaseSettings):
     
     TELEGRAM_BOT_TOKEN: SecretStr = Field(None, env="TELEGRAM_BOT_TOKEN")
     
     GIGACHAT_CREDENTIALS: SecretStr = Field(None, env="GIGACHAT_CREDENTIALS")
+    GIGACHAT_MODEL: str = Field("GigaChat", env="GIGACHAT_MODEL")
+    GIGACHAT_SCOPE: str = Field("GIGACHAT_API_PERS", env="GIGACHAT_SCOPE")
+    GIGACHAT_CA_BUNDLE_FILE: str = Field("russian_trusted_root_ca.cer", env="GIGACHAT_CA_BUNDLE_FILE")
 
     BASE_IMAGE_URLS: List[str] = [
         "https://i.pinimg.com/736x/07/04/4b/07044befeccfd9edc04a63ab924a3a5d.jpg",
@@ -28,17 +27,20 @@ class Settings(BaseSettings):
         "https://i.pinimg.com/736x/a9/52/62/a95262fe6371ae72577bb603d870a3f1.jpg"
     ]
 
-    TAROT_DECK: List[TarotCard] = Field(
-        default=[
-            {
-                "name": "0. Шут �",
-                "key_words": "Новые начинания, спонтанность, невинность",
-                "meaning": "Вот ты стоишь на краю обрыва. Ну чо, прыгаем? 🤪"
-            }
-        ],
-        description="Колода карт Таро с их значениями"
-    )
+    TAROT_DECK: List[TarotCard] = Field(None, description="Колода карт Таро с их значениями")
 
+    TAROT_DAILY_CARD_GENERATOR_CLASS: Optional[ITarotDailyCardGenerator] = Field(default=None)
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Создаем экземпляр генератора **после** загрузки значений из env
+        self.TAROT_DAILY_CARD_GENERATOR_CLASS = GigaChatTarotDailyCardGenerator(
+            credentials=self.GIGACHAT_CREDENTIALS.get_secret_value() if self.GIGACHAT_CREDENTIALS else None,
+            scope=self.GIGACHAT_SCOPE,
+            model=self.GIGACHAT_MODEL,
+            ca_bundle_file=self.GIGACHAT_CA_BUNDLE_FILE
+        )
+        
     @field_validator('TAROT_DECK', mode='before')
     @classmethod
     def load_tarot_from_json(cls, v, info):

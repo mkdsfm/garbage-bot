@@ -1,7 +1,7 @@
 import random
 from typing import List, Optional
 
-from config.config import TarotCard
+from config import TarotCard
 
 class Card:
     name: str
@@ -25,3 +25,11 @@ def get_card(tarot_list: List[TarotCard]) -> Card:
             result.meaning += f"{alter_meaning}\n\n"
 
     return result
+
+
+from abc import ABC, abstractmethod
+
+class ITarotDailyCardGenerator(ABC):
+    @abstractmethod
+    async def generate_meaning_from_name_async(self, name_card: str) -> str:
+        pass

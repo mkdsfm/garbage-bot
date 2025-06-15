@@ -3,12 +3,10 @@ from aiogram import Router, F
 from aiogram.types import Message, FSInputFile  
 from aiogram.utils.media_group import MediaGroupBuilder
 from aiogram.filters import Command
-from app.tarot.manager import get_card
+from app.tarot_daily_card.manager import get_card
 from config import settings
 import logging
 import random
-
-from config.config import TarotCard
 
 logger = logging.getLogger(__name__)
 
@@ -22,13 +20,12 @@ async def cmd_daily_card(message: Message):
             return
     
     card = get_card(settings.TAROT_DECK)
+
+    generator = settings.TAROT_DAILY_CARD_GENERATOR_CLASS
+    meaning = await generator.generate_meaning_from_name_async(card.name)
     
     try:
-        content = (
-            f"✨ Карта дня: {card.name} \n\n"
-            f"Ключевые слова: {card.key_words} \n\n"
-            f"Значение: {card.meaning} \n\n"
-        )
+        content = (meaning)
 
         if card.music_url:
             content += f"{card.music_url}\n\n"
